@@ -1,5 +1,5 @@
 const getTimeout = (time) => {
-  return 0
+  return 20000
 }
 
-export default getTimeout
+module.exports = getTimeout
