@@ -1,4 +1,4 @@
-# 0.2.0 - ToDo List backend:
+# 0.2.1 - ToDo List backend:
 
 ### Pending tasks:
 1. create email and update mailTransporter.js

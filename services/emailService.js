@@ -2,13 +2,14 @@ const getTimeout = require("./getTimeout")
 const mailTransporter = require("./mailTransporter")
 const TasksSchema = require("../models/TasksSchema")
 
-const map = new Map()
+const emailTimeoutMap = new Map()
 
 const deleteTimeoutEmail = (email, task_index) => {
   const key = email + task_index
-  const timeoutID = map.get(key)
+  const timeoutID = emailTimeoutMap.get(key)
   clearTimeout(timeoutID)
-  map.delete(key)
+  emailTimeoutMap.delete(key)
+  console.log("Email timeout deleted successfully")
 }
 
 const emailService = (from, to, subject, text, task_index, timeout) => {
@@ -27,7 +28,7 @@ const emailService = (from, to, subject, text, task_index, timeout) => {
       }
     })
   }, timeout)
-  map.set(to + task_index, timeoutID)
+  emailTimeoutMap.set(to + task_index, timeoutID)
 }
 
 const rebootemailService = () => {
@@ -47,6 +48,7 @@ const rebootemailService = () => {
           }
         }
       }
+      console.log("Reboot email Service successful")
     })
     .catch((err) => {
       console.log("Failed to Reboot email Service " + err)
