@@ -7,13 +7,15 @@ const rebootemailService = require("./services/emailService").rebootemailService
 
 // MongoDB Atlas Connection
 mongoose.set("strictQuery", true)
-mongoose.connect("connection string")
+mongoose.connect("mongodb://127.0.0.1:27017/todolist")
 var db = mongoose.connection
-db.on("open", () => console.log("Connected to DB"))
+db.on("open", () => {
+  // Connected to DB
+  console.log("Connected to DB")
+  // Reboot Email Service
+  rebootemailService()
+})
 db.on("error", () => console.log("Not Connected to DB"))
-
-// Reboot Email Service
-rebootemailService()
 
 // Creating middlewares using express
 const app = express()
