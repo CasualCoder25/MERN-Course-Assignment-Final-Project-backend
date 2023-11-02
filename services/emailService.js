@@ -27,25 +27,25 @@ const emailService = (from, to, subject, text, task_index, timeout) => {
         console.log("Email sent successfully - user:" + to)
       }
     })
+    emailTimeoutMap.delete(to + task_index)
+    console.log("Email timeout deleted successfully")
   }, timeout)
   emailTimeoutMap.set(to + task_index, timeoutID)
 }
 
 const rebootemailService = () => {
-  TasksSchema.find({})
+  TasksSchema.find({ reminder_active: true })
     .then((data) => {
       for (let i = 0; i < data.length; i++) {
         let user = data[i].user_email_id
-        let tasks = data[i].tasks
+        let task_name = data[i].task_name
         let from = "todolistmail23@gmail.com"
         let subject = "Reminder for your task..."
-
-        for (let j = 0; j < tasks.length; j++) {
-          if (tasks[j].reminderTime !== null) {
-            let text = "Your task " + tasks[j].name + " is still pending"
-            let timeout = getTimeout(tasks[j].reminderTime)
-            emailService(from, user, subject, text, tasks[j].id, timeout)
-          }
+        if (data[i].reminder_time) {
+          let text = "Your task " + task_name + " is still pending"
+          let timeout = getTimeout(data[i].reminder_time)
+          // Add edge case code here
+          emailService(from, user, subject, text, data[i]._id, timeout)
         }
       }
       console.log("Reboot email Service successful")
