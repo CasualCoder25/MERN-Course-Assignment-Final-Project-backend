@@ -1,4 +1,4 @@
-# 0.2.4 - ToDo List backend:
+# 0.3.0 - ToDo List backend:
 
 ### Pending tasks:
 1. create getTimeout() in getTimeout.js (This function returns the number of ms between current time and sent time)
