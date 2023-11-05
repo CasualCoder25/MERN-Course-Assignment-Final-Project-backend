@@ -13,6 +13,22 @@ const deleteTimeoutEmail = (email, task_index) => {
   console.log("Email timeout deleted successfully")
 }
 
+const emailOTP = (from, to, subject, text) => {
+  let mailDetails = {
+    from: from,
+    to: to,
+    subject: subject,
+    text: text,
+  }
+  mailTransporter.sendMail(mailDetails, (err, data) => {
+    if (err) {
+      console.log("Email not sent...Error - user:" + to + " err:" + err)
+    } else {
+      console.log("Email sent successfully - user:" + to)
+    }
+  })
+}
+
 const emailService = (from, to, subject, text, task_index, timeout) => {
   const timeoutID = setTimeout(() => {
     let mailDetails = {
@@ -75,4 +91,9 @@ const rebootemailService = () => {
     })
 }
 
-module.exports = { emailService, rebootemailService, deleteTimeoutEmail }
+module.exports = {
+  emailService,
+  rebootemailService,
+  deleteTimeoutEmail,
+  emailOTP,
+}

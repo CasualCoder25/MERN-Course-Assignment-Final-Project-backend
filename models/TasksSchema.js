@@ -8,7 +8,7 @@ const TasksSchema = mongoose.Schema(
     priority_number: { type: Number, required: true },
     reminder_active: { type: Boolean, required: true, index: true },
     reminder_time: { type: String },
-    completed: { type: Boolean, required: true },
+    completed: { type: Boolean, required: true, index: true },
   },
   {
     collection: "tasks",

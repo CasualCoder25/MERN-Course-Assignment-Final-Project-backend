@@ -2,7 +2,9 @@ const mongoose = require("mongoose")
 const cors = require("cors")
 const bodyparser = require("body-parser")
 const express = require("express")
-const routes = require("./controller/routes")
+const userRoutes = require("./controller/userRoutes")
+const taskRoutes = require("./controller/taskRoutes")
+const { validateUserToken } = require("./auth/auth")
 const rebootemailService = require("./services/emailService").rebootemailService
 
 // MongoDB Atlas Connection
@@ -24,7 +26,11 @@ const app = express()
 app.use(bodyparser.json())
 app.use(bodyparser.urlencoded({ extended: true }))
 app.use(cors())
-app.use("/", routes)
+
+// User Routes
+app.use("/user", userRoutes)
+// Task Routes
+app.use("/task", validateUserToken, taskRoutes)
 
 // Listening to a port number
 app.listen(8000, () => console.log("Server started at 8000"))
