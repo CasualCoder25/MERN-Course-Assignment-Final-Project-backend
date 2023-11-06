@@ -1,13 +1,17 @@
 const OTPgen = require("otp-generator")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
+const { v4: uuid } = require("uuid")
 const { emailOTP } = require("../services/emailService")
 const secretkey = "voldemort"
 
 const OTPstore = new Map()
 
 const createUserToken = (user) => {
-  const accessToken = jwt.sign({ email: user.email }, secretkey)
+  const accessToken = jwt.sign(
+    { email: user.email, token_id: uuid() },
+    secretkey
+  )
   return accessToken
 }
 

@@ -1,8 +1,11 @@
 const mongoose = require("mongoose")
 const cors = require("cors")
 const bodyparser = require("body-parser")
+const cookieparser = require("cookie-parser")
 const express = require("express")
-const userRoutes = require("./controller/userRoutes")
+const userCreateRoutes = require("./controller/userCreateRoutes")
+const userEditRoutes = require("./controller/userEditRoutes")
+const passEditRoutes = require("./controller/passEditRoutes")
 const taskRoutes = require("./controller/taskRoutes")
 const { validateUserToken } = require("./auth/auth")
 const rebootemailService = require("./services/emailService").rebootemailService
@@ -26,9 +29,14 @@ const app = express()
 app.use(bodyparser.json())
 app.use(bodyparser.urlencoded({ extended: true }))
 app.use(cors())
+app.use(cookieparser())
 
-// User Routes
-app.use("/user", userRoutes)
+// User Edit Routes
+app.use("/user-create", userCreateRoutes)
+// Password Edit Routes
+app.use("/pass-edit", passEditRoutes)
+// User Create Routes
+app.use("/user-edit", validateUserToken, userEditRoutes)
 // Task Routes
 app.use("/task", validateUserToken, taskRoutes)
 
