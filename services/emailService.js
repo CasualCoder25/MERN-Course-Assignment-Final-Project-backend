@@ -5,12 +5,14 @@ const mongoose = require("mongoose")
 
 const emailTimeoutMap = new Map()
 
-const deleteTimeoutEmail = (email, task_index) => {
-  const key = email + task_index
+const deleteTimeoutEmail = (email, task_id) => {
+  const key = email + task_id
   const timeoutID = emailTimeoutMap.get(key)
-  clearTimeout(timeoutID)
-  emailTimeoutMap.delete(key)
-  console.log("Email timeout deleted successfully")
+  if (timeoutID) {
+    clearTimeout(timeoutID)
+    emailTimeoutMap.delete(key)
+    console.log("Email timeout deleted successfully")
+  }
 }
 
 const emailOTP = (from, to, subject, text) => {
@@ -29,7 +31,7 @@ const emailOTP = (from, to, subject, text) => {
   })
 }
 
-const emailService = (from, to, subject, text, task_index, timeout) => {
+const emailService = (from, to, subject, text, task_id, timeout) => {
   const timeoutID = setTimeout(() => {
     let mailDetails = {
       from: from,
@@ -44,10 +46,11 @@ const emailService = (from, to, subject, text, task_index, timeout) => {
         console.log("Email sent successfully - user:" + to)
       }
     })
-    emailTimeoutMap.delete(to + task_index)
+    emailTimeoutMap.delete(to + task_id)
     console.log("Email timeout deleted successfully")
   }, timeout)
-  emailTimeoutMap.set(to + task_index, timeoutID)
+  emailTimeoutMap.set(to + task_id, timeoutID)
+  console.log("Email timeout created successfully")
 }
 
 const rebootemailService = () => {
@@ -73,7 +76,12 @@ const rebootemailService = () => {
         let from = "todolistmail23@gmail.com"
         let subject = "Reminder for your task..."
         if (data[i].reminder_time) {
-          let text = "Your task " + task_name + " is still pending"
+          let text =
+            "Your task " +
+            task_name +
+            " is due at " +
+            data[i].reminder_time +
+            "."
           let timeout = getTimeout(data[i].reminder_time)
           if (timeout >= 0) {
             emailService(from, user, subject, text, data[i]._id, timeout)

@@ -6,40 +6,34 @@ const { deleteTimeoutEmail, emailService } = require("../services/emailService")
 const getTimeout = require("../services/getTimeout")
 
 // PENDING-TASKS
-taskRoutes.get("/pending-tasks", async (req, res) => {
+taskRoutes.get("/pending-tasks", (req, res) => {
   const email = req.user.email
-  await TasksSchema.find(
-    { user_email_id: email, completed: false },
-    (err, data) => {
-      if (err) {
-        console.log(err)
-        res.json({ error: err, status: 500 })
-      } else {
-        res.json(data)
-      }
+  TasksSchema.find({ user_email_id: email, completed: false }, (err, data) => {
+    if (err) {
+      console.log(err)
+      res.json({ error: err, status: 500 })
+    } else {
+      res.json(data)
     }
-  )
+  })
 })
 
 // COMPLETED-TASKS
-taskRoutes.get("/competed-tasks", async (req, res) => {
+taskRoutes.get("/completed-tasks", (req, res) => {
   const email = req.user.email
-  await TasksSchema.find(
-    { user_email_id: email, completed: true },
-    (err, data) => {
-      if (err) {
-        console.log(err)
-        res.json({ error: err, status: 500 })
-      } else {
-        res.json(data)
-      }
+  TasksSchema.find({ user_email_id: email, completed: true }, (err, data) => {
+    if (err) {
+      console.log(err)
+      res.json({ error: err, status: 500 })
+    } else {
+      res.json(data)
     }
-  )
+  })
 })
 
 // CREATE-TASK AND OPITIONAL EMAIL-REMINDER
 taskRoutes.post("/create-task", (req, res) => {
-  const {
+  let {
     user_email_id,
     task_name,
     task_description,
@@ -64,28 +58,26 @@ taskRoutes.post("/create-task", (req, res) => {
     reminder_time: reminder_time,
     completed: completed,
   }
-  TasksSchema.create(task)
-    .then((data) => {
-      const email = data.user_email_id
+  TasksSchema.create(task, (err, data) => {
+    if (err) {
+      res.json({ error: err, status: 500 })
+    } else {
       const task_id = data._id
-      const reminder_active = data.reminder_active
       const from = "todolistmail23@gmail.com"
       if (reminder_active) {
         const timeout = getTimeout(reminder_time)
         if (timeout > 0) {
-          emailService(from, email, subject, text, task_id, timeout)
+          emailService(from, user_email_id, subject, text, task_id, timeout)
         }
       }
       res.json({ message: "Success" })
-    })
-    .catch((err) => {
-      res.json({ error: err, status: 500 })
-    })
+    }
+  })
 })
 
 // EDIT-TASK
 taskRoutes.put("/edit-task", (req, res) => {
-  const {
+  let {
     task_id,
     user_email_id,
     task_name,
@@ -111,26 +103,27 @@ taskRoutes.put("/edit-task", (req, res) => {
     reminder_time: reminder_time,
     completed: completed,
   }
-  deleteTimeoutEmail(user_email_id, task_id)
-  TasksSchema.findByIdAndUpdate(mongoose.Types.ObjectId(task_id), {
-    $set: task,
-  })
-    .then((data) => {
-      const email = data.user_email_id
-      const task_id = data._id
-      const reminder_active = data.reminder_active
-      const from = "todolistmail23@gmail.com"
-      if (reminder_active) {
-        const timeout = getTimeout(reminder_time)
-        if (timeout > 0) {
-          emailService(from, email, subject, text, task_id, timeout)
+  TasksSchema.findByIdAndUpdate(
+    mongoose.Types.ObjectId(task_id),
+    {
+      $set: task,
+    },
+    (err, data) => {
+      if (err) {
+        res.json({ error: err, status: 500 })
+      } else {
+        const from = "todolistmail23@gmail.com"
+        deleteTimeoutEmail(user_email_id, task_id)
+        if (reminder_active) {
+          const timeout = getTimeout(reminder_time)
+          if (timeout > 0) {
+            emailService(from, user_email_id, subject, text, task_id, timeout)
+          }
         }
+        res.json({ message: "Success" })
       }
-      res.json({ message: "Success" })
-    })
-    .catch((err) => {
-      res.json({ error: err, status: 500 })
-    })
+    }
+  )
 })
 
 // DELETE-TASKS
