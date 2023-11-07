@@ -16,9 +16,9 @@ userCreateRoutes.post("/signup", (req, res) => {
     },
     (err, data) => {
       if (err) {
-        res.json({ message: "Success" })
+        res.json({ error: err, status: 500 })
       } else {
-        res.json({ error: err })
+        res.json({ message: "Success" })
       }
     }
   )

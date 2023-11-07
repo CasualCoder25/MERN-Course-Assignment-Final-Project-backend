@@ -26,7 +26,7 @@ const validateUserToken = (req, res, next) => {
   }
 }
 
-const getOTP = (email) => {
+const getOTP = async (email) => {
   const from = "todolistmail23@gmail.com"
   const to = email
   const subject = "OTP for password reset"
@@ -34,8 +34,8 @@ const getOTP = (email) => {
     upperCaseAlphabets: true,
     specialChars: true,
   })
-  const salt = bcrypt.genSalt(10)
-  const hashedOTP = bcrypt.hash(OTP, salt)
+  const salt = await bcrypt.genSalt(10)
+  const hashedOTP = await bcrypt.hash(OTP, salt)
   OTPstore.set(email, hashedOTP)
   setTimeout((email) => {
     OTPstore.delete(email)
@@ -44,9 +44,13 @@ const getOTP = (email) => {
   emailOTP(from, to, subject, text)
 }
 
-const verifyOTP = (email, OTP) => {
+const verifyOTP = async (email, OTP) => {
   const hashedOTP = OTPstore.get(email)
-  return bcrypt.compare(OTP, hashedOTP)
+  if (hashedOTP && OTP) {
+    return await bcrypt.compare(OTP, hashedOTP)
+  } else {
+    return false
+  }
 }
 
 module.exports = { createUserToken, validateUserToken, getOTP, verifyOTP }

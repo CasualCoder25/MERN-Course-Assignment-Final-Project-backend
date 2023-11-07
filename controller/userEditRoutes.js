@@ -55,7 +55,7 @@ userEditRoutes.put("/edit-user", (req, res) => {
 userEditRoutes.delete("/delete-user", (req, res) => {
   const { password } = req.body
   const email = req.user.email
-  UserSchema.findOne({ email: email }, (err, data) => {
+  UserSchema.findOne({ email: email }, (err, user) => {
     if (err) {
       res.json({ error: "Unable to fetch user", status: 500 })
     } else {
@@ -71,7 +71,6 @@ userEditRoutes.delete("/delete-user", (req, res) => {
               mongoose.Types.ObjectId(user._id),
               (err, data) => {
                 if (err) {
-                  console.log(err)
                   res.json({ error: err, status: 500 })
                 } else {
                   res.cookie("user", {})
