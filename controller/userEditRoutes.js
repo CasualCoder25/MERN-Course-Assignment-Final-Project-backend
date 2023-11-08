@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt")
 const userEditRoutes = express.Router()
 const UserSchema = require("../models/UserSchema")
 const { createUserToken } = require("../auth/auth")
+const TasksSchema = require("../models/TasksSchema")
 
 // EDIT-USER
 userEditRoutes.put("/edit-user", (req, res) => {
@@ -71,10 +72,27 @@ userEditRoutes.delete("/delete-user", (req, res) => {
               mongoose.Types.ObjectId(user._id),
               (err, data) => {
                 if (err) {
-                  res.json({ error: err, status: 500 })
+                  res.json({
+                    message: "Failed to delete user",
+                    error: err,
+                    status: 500,
+                  })
                 } else {
                   res.cookie("user", {})
-                  res.json({ message: "Success" })
+                  TasksSchema.deleteMany(
+                    { user_email_id: email },
+                    (err, data) => {
+                      if (err) {
+                        res.json({
+                          message: "Failed to delete user tasks",
+                          error: err,
+                          status: 500,
+                        })
+                      } else {
+                        res.json({ message: "Success" })
+                      }
+                    }
+                  )
                 }
               }
             )
