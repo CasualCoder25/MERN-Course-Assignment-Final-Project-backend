@@ -56,4 +56,10 @@ userCreateRoutes.post("/login", (req, res) => {
   })
 })
 
+//LOGOUT
+userCreateRoutes.get("/logout", (req, res) => {
+  res.cookie("user", {})
+  res.json({ message: "Success" })
+})
+
 module.exports = userCreateRoutes
