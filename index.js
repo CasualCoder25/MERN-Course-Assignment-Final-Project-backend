@@ -7,6 +7,7 @@ const userCreateRoutes = require("./controller/userCreateRoutes")
 const userEditRoutes = require("./controller/userEditRoutes")
 const passEditRoutes = require("./controller/passEditRoutes")
 const taskRoutes = require("./controller/taskRoutes")
+const feedbackRoutes = require("./controller/feedbackRoute")
 const { validateUserToken } = require("./auth/auth")
 const rebootemailService = require("./services/emailService").rebootemailService
 
@@ -31,6 +32,8 @@ app.use(bodyparser.urlencoded({ extended: true }))
 app.use(cors())
 app.use(cookieparser())
 
+// User Feedback
+app.use("/feedback", feedbackRoutes)
 // User Edit Routes
 app.use("/user-create", userCreateRoutes)
 // Password Edit Routes
