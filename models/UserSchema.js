@@ -1,5 +1,7 @@
 const mongoose = require("mongoose")
 const bcrypt = require("bcrypt")
+const uniqueValidator = require("mongoose-unique-validator")
+
 const UserSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
@@ -38,5 +40,7 @@ UserSchema.pre(
     }
   }
 )
+
+UserSchema.plugin(uniqueValidator)
 
 module.exports = mongoose.model("UserSchema", UserSchema)

@@ -18,6 +18,10 @@ userCreateRoutes.post("/signup", (req, res) => {
       if (err) {
         res.json({ error: err, status: 500 })
       } else {
+        const accessToken = createUserToken({ email: email })
+        res.cookie("user", accessToken, {
+          maxAge: 60 * 60 * 24 * 1000,
+        })
         res.json({ message: "Success" })
       }
     }
@@ -33,25 +37,26 @@ userCreateRoutes.post("/login", (req, res) => {
     } else {
       if (!user) {
         res.json({ error: "User does not exist", status: 500 })
+      } else {
+        const hashedPassword = user.password
+        bcrypt
+          .compare(password, hashedPassword)
+          .then((match) => {
+            if (match) {
+              const accessToken = createUserToken({ email: email })
+              res.cookie("user", accessToken, {
+                maxAge: 60 * 60 * 24 * 1000,
+              })
+              res.json({ message: "Success" })
+            } else {
+              res.json({ error: "Invalid credentials", status: 500 })
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+            res.json({ error: "Failed", status: 500 })
+          })
       }
-      const hashedPassword = user.password
-      bcrypt
-        .compare(password, hashedPassword)
-        .then((match) => {
-          if (match) {
-            const accessToken = createUserToken({ email: email })
-            res.cookie("user", accessToken, {
-              maxAge: 60 * 60 * 24 * 1000,
-            })
-            res.json({ message: "Success" })
-          } else {
-            res.json({ error: "Invalid credentials", status: 500 })
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-          res.json({ error: "Failed", status: 500 })
-        })
     }
   })
 })

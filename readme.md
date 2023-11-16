@@ -1,5 +1,6 @@
-# 1.1.0 - ToDo List backend:
+# 1.1.1 - ToDo List backend:
 
+- Bug Fixes for create user
 - Feedback route
 - Open To Use
 - All Pending Tasks Completed XD
