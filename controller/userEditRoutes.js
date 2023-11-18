@@ -55,7 +55,7 @@ userEditRoutes.put("/edit-user", (req, res) => {
 })
 
 // DELETE-USER
-userEditRoutes.delete("/delete-user", (req, res) => {
+userEditRoutes.post("/delete-user", (req, res) => {
   const { password } = req.body
   const email = req.user.email
   UserSchema.findOne({ email: email }, (err, user) => {
@@ -91,6 +91,15 @@ userEditRoutes.delete("/delete-user", (req, res) => {
                           status: 500,
                         })
                       } else {
+                        res.cookie(
+                          "user",
+                          {},
+                          {
+                            secure: true,
+                            httpOnly: true,
+                            maxAge: 60 * 60 * 24 * 1000,
+                          }
+                        )
                         res.json({ message: "Success" })
                       }
                     }
