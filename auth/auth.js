@@ -22,7 +22,7 @@ const validateUserToken = (req, res, next) => {
     req.user = validToken
     next()
   } catch (err) {
-    return res.json({ message: "User not logged in", error: err, status: 300 })
+    return res.json({ message: "User not logged in", error: err, status: 500 })
   }
 }
 

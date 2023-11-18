@@ -20,6 +20,8 @@ userCreateRoutes.post("/signup", (req, res) => {
       } else {
         const accessToken = createUserToken({ email: email })
         res.cookie("user", accessToken, {
+          secure: true,
+          httpOnly: true,
           maxAge: 60 * 60 * 24 * 1000,
         })
         res.json({ message: "Success" })
@@ -45,6 +47,8 @@ userCreateRoutes.post("/login", (req, res) => {
             if (match) {
               const accessToken = createUserToken({ email: email })
               res.cookie("user", accessToken, {
+                secure: true,
+                httpOnly: true,
                 maxAge: 60 * 60 * 24 * 1000,
               })
               res.json({ message: "Success" })
@@ -63,7 +67,15 @@ userCreateRoutes.post("/login", (req, res) => {
 
 //LOGOUT
 userCreateRoutes.get("/logout", (req, res) => {
-  res.cookie("user", {})
+  res.cookie(
+    "user",
+    {},
+    {
+      secure: true,
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 1000,
+    }
+  )
   res.json({ message: "Success" })
 })
 
