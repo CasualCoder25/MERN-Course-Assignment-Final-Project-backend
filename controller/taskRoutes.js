@@ -153,7 +153,7 @@ taskRoutes.put("/edit-task", (req, res) => {
 })
 
 // DELETE-TASKS
-taskRoutes.delete("/delete-task", (req, res) => {
+taskRoutes.post("/delete-task", (req, res) => {
   const user_email_id = req.user.email
   const { task_id } = req.body
   if (task_id) {
