@@ -32,25 +32,34 @@ const emailOTP = (from, to, subject, text) => {
 }
 
 const emailService = (from, to, subject, text, task_id, timeout) => {
-  const timeoutID = setTimeout(() => {
-    let mailDetails = {
-      from: from,
-      to: to,
-      subject: subject,
-      text: text,
-    }
-    mailTransporter.sendMail(mailDetails, (err, data) => {
-      if (err) {
-        console.log("Email not sent...Error - user:" + to + " err:" + err)
-      } else {
-        console.log("Email sent successfully - user:" + to)
+  const max = 2147483647
+  if (timeout <= max) {
+    const timeoutID = setTimeout(() => {
+      let mailDetails = {
+        from: from,
+        to: to,
+        subject: subject,
+        text: text,
       }
-    })
-    emailTimeoutMap.delete(to + task_id)
-    console.log("Email timeout deleted successfully")
-  }, timeout)
-  emailTimeoutMap.set(to + task_id, timeoutID)
-  console.log("Email timeout created successfully")
+      mailTransporter.sendMail(mailDetails, (err, data) => {
+        if (err) {
+          console.log("Email not sent...Error - user:" + to + " err:" + err)
+        } else {
+          console.log("Email sent successfully - user:" + to)
+        }
+      })
+      emailTimeoutMap.delete(to + task_id)
+      console.log("Email timeout deleted successfully")
+    }, timeout)
+    emailTimeoutMap.set(to + task_id, timeoutID)
+    console.log("Email timeout created successfully")
+  } else {
+    const timeoutID = setTimeout(() => {
+      emailService(from, to, subject, text, task_id, timeout - max)
+    }, max)
+    emailTimeoutMap.set(to + task_id, timeoutID)
+    console.log("Email timeout cycle created successfully")
+  }
 }
 
 const rebootemailService = () => {
