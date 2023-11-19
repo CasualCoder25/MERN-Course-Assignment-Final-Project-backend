@@ -34,6 +34,7 @@ userEditRoutes.put("/edit-user", (req, res) => {
                 } else {
                   const accessToken = createUserToken({ email: user.email })
                   res.cookie("user", accessToken, {
+                    sameSite: "none",
                     secure: true,
                     httpOnly: true,
                     maxAge: 60 * 60 * 24 * 1000,
@@ -95,6 +96,7 @@ userEditRoutes.post("/delete-user", (req, res) => {
                           "user",
                           {},
                           {
+                            sameSite: "none",
                             secure: true,
                             httpOnly: true,
                             maxAge: 60 * 60 * 24 * 1000,

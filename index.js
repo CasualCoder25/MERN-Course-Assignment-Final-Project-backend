@@ -29,6 +29,7 @@ db.on("error", () => console.log("Not Connected to DB"))
 
 // Creating middlewares using express
 const app = express()
+app.set("trust proxy", 1)
 
 // Middlewares
 app.use(bodyparser.json())
@@ -36,9 +37,9 @@ app.use(bodyparser.urlencoded({ extended: true }))
 app.use(
   cors({
     origin: [
-      "mern-final-project-frontend.vercel.app",
-      "mern-final-project-frontend-git-main-sagar-ss-projects.vercel.app",
-      "mern-final-project-frontend-sagar-ss-projects.vercel.app",
+      "https://mern-final-project-frontend.vercel.app",
+      "https://mern-final-project-frontend-git-main-sagar-ss-projects.vercel.app",
+      "https://mern-final-project-frontend-sagar-ss-projects.vercel.app",
     ],
     credentials: true,
   })
