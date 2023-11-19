@@ -29,6 +29,7 @@ db.on("error", () => console.log("Not Connected to DB"))
 
 // Creating middlewares using express
 const app = express()
+app.set("trust proxy", 1)
 
 // Middlewares
 app.use(bodyparser.json())
