@@ -21,7 +21,7 @@ const htmlEmail = (task_name, reminder_time) => {
             <a
               target="_blank"
               style="color: white; text-decoration: none"
-              href="http://localhost:3000/login"
+              href="https://mern-final-project-frontend.vercel.app/login"
               >Go To Task</a
             >
           </button>

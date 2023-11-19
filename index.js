@@ -33,7 +33,12 @@ const app = express()
 // Middlewares
 app.use(bodyparser.json())
 app.use(bodyparser.urlencoded({ extended: true }))
-app.use(cors({ origin: "http://localhost:3000", credentials: true }))
+app.use(
+  cors({
+    origin: "https://mern-final-project-frontend.vercel.app",
+    credentials: true,
+  })
+)
 app.use(cookieparser())
 
 // User Feedback
