@@ -35,6 +35,7 @@ const emailOTP = (from, to, subject, text) => {
 const emailService = (from, to, subject, html, task_id, timeout) => {
   const max = 2147483647
   if (timeout <= max) {
+    console.log(timeout)
     const timeoutID = setTimeout(() => {
       let mailDetails = {
         from: from,
