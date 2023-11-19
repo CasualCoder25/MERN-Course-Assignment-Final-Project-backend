@@ -3,9 +3,16 @@ const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
 const { v4: uuid } = require("uuid")
 const { emailOTP } = require("../services/emailService")
-const secretkey = "voldemort"
+const getSecretKey = require("./getSecretKey")
+let secretkey = getSecretKey(new Date())
+
+const refreshSecretKey = () => {
+  secretkey = getSecretKey(new Date())
+  setTimeout(refreshSecretKey, 24 * 60 * 60 * 1000)
+}
 
 const OTPstore = new Map()
+refreshSecretKey()
 
 const createUserToken = (user) => {
   const accessToken = jwt.sign(

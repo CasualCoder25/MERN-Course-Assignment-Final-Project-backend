@@ -3,6 +3,7 @@ const express = require("express")
 const taskRoutes = express.Router()
 const TasksSchema = require("../models/TasksSchema")
 const { deleteTimeoutEmail, emailService } = require("../services/emailService")
+const htmlEmail = require("../services/htmlEmail")
 const getTimeout = require("../services/getTimeout")
 const inputTaskValidator = require("../models/inputTaskValidator")
 
@@ -46,7 +47,7 @@ taskRoutes.post("/create-task", (req, res) => {
     completed,
   } = req.body
   const subject = "Reminder for task " + task_name
-  const text = "Your task " + task_name + " is due at " + reminder_time + "."
+  const html = htmlEmail(task_name, reminder_time)
   if (valid) {
     if (completed || !reminder_time) {
       reminder_active = false
@@ -70,7 +71,7 @@ taskRoutes.post("/create-task", (req, res) => {
         if (reminder_active) {
           const timeout = getTimeout(reminder_time)
           if (timeout > 0) {
-            emailService(from, user_email_id, subject, text, task_id, timeout)
+            emailService(from, user_email_id, subject, html, task_id, timeout)
           }
         }
         res.json({ message: "Success" })
@@ -96,7 +97,7 @@ taskRoutes.put("/edit-task", (req, res) => {
     completed,
   } = req.body
   const subject = "Reminder for task " + task_name
-  const text = "Your task " + task_name + " is due at " + reminder_time + "."
+  const html = htmlEmail(task_name, reminder_time)
   if (valid && task_id) {
     if (completed || !reminder_time) {
       reminder_active = false
@@ -133,7 +134,7 @@ taskRoutes.put("/edit-task", (req, res) => {
                     from,
                     user_email_id,
                     subject,
-                    text,
+                    html,
                     task_id,
                     timeout
                   )

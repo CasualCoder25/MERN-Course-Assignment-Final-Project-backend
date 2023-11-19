@@ -1,5 +1,6 @@
 const getTimeout = require("./getTimeout")
 const mailTransporter = require("./mailTransporter")
+const htmlEmail = require("./htmlEmail")
 const TasksSchema = require("../models/TasksSchema")
 const mongoose = require("mongoose")
 
@@ -31,7 +32,7 @@ const emailOTP = (from, to, subject, text) => {
   })
 }
 
-const emailService = (from, to, subject, text, task_id, timeout) => {
+const emailService = (from, to, subject, html, task_id, timeout) => {
   const max = 2147483647
   if (timeout <= max) {
     const timeoutID = setTimeout(() => {
@@ -39,7 +40,7 @@ const emailService = (from, to, subject, text, task_id, timeout) => {
         from: from,
         to: to,
         subject: subject,
-        text: text,
+        html: html,
       }
       mailTransporter.sendMail(mailDetails, (err, data) => {
         if (err) {
@@ -55,7 +56,7 @@ const emailService = (from, to, subject, text, task_id, timeout) => {
     console.log("Email timeout created successfully")
   } else {
     const timeoutID = setTimeout(() => {
-      emailService(from, to, subject, text, task_id, timeout - max)
+      emailService(from, to, subject, html, task_id, timeout - max)
     }, max)
     emailTimeoutMap.set(to + task_id, timeoutID)
     console.log("Email timeout cycle created successfully")
@@ -85,15 +86,10 @@ const rebootemailService = () => {
         let from = "todolistmail23@gmail.com"
         let subject = "Reminder for your task..."
         if (data[i].reminder_time) {
-          let text =
-            "Your task " +
-            task_name +
-            " is due at " +
-            data[i].reminder_time +
-            "."
+          let html = htmlEmail(task_name, data[i].reminder_time)
           let timeout = getTimeout(data[i].reminder_time)
           if (timeout >= 0) {
-            emailService(from, user, subject, text, data[i]._id, timeout)
+            emailService(from, user, subject, html, data[i]._id, timeout)
           } else {
             setTaskReminderActiveFalse(data[i]._id)
           }
