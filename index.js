@@ -13,9 +13,11 @@ const rebootemailService = require("./services/emailService").rebootemailService
 
 // MongoDB Atlas Connection
 mongoose.set("strictQuery", true)
-mongoose.connect(
-  "mongodb+srv://todolistmail23:usersTask12345@todocluster.3mr9jur.mongodb.net/todolist"
-)
+mongoose
+  .connect(
+    "mongodb+srv://todolistmail23:usersTask12345@todocluster.3mr9jur.mongodb.net/todolist"
+  )
+  .catch((error) => console.log(error))
 var db = mongoose.connection
 db.on("open", () => {
   // Connected to DB
