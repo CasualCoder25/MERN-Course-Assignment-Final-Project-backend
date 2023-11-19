@@ -35,7 +35,11 @@ app.use(bodyparser.json())
 app.use(bodyparser.urlencoded({ extended: true }))
 app.use(
   cors({
-    origin: "https://mern-final-project-frontend.vercel.app",
+    origin: [
+      "https://mern-final-project-frontend.vercel.app",
+      "https://mern-final-project-frontend-git-main-sagar-ss-projects.vercel.app",
+      "https://mern-final-project-frontend-sagar-ss-projects.vercel.app",
+    ],
     credentials: true,
   })
 )
