@@ -42,6 +42,9 @@ app.use(
       "https://mern-final-project-frontend.vercel.app",
       "https://mern-final-project-frontend-git-main-sagar-ss-projects.vercel.app",
       "https://mern-final-project-frontend-sagar-ss-projects.vercel.app",
+      "https://13.228.225.19",
+      "https://18.142.128.26",
+      "https://54.254.162.138",
     ],
     credentials: true,
   })
