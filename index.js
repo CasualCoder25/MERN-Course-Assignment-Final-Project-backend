@@ -8,8 +8,10 @@ const userEditRoutes = require("./controller/userEditRoutes")
 const passEditRoutes = require("./controller/passEditRoutes")
 const taskRoutes = require("./controller/taskRoutes")
 const feedbackRoutes = require("./controller/feedbackRoute")
+const sleepPreventRoutes = require("./controller/sleepPreventerRoute")
 const { validateUserToken } = require("./auth/auth")
 const rebootemailService = require("./services/emailService").rebootemailService
+const sleepPreventer = require("./services/sleepPreventer")
 
 // MongoDB Atlas Connection
 mongoose.set("strictQuery", true)
@@ -46,6 +48,8 @@ app.use(
 )
 app.use(cookieparser())
 
+// Sleep Prevent Route
+app.use("/sleep-prevent", sleepPreventRoutes)
 // User Feedback
 app.use("/feedback", feedbackRoutes)
 // User Edit Routes
@@ -59,3 +63,6 @@ app.use("/task", validateUserToken, taskRoutes)
 
 // Listening to a port number
 app.listen(8000, () => console.log("Server started at 8000"))
+
+// Sleep Preventer
+sleepPreventer()
