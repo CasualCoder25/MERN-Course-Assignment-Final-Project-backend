@@ -1,5 +1,6 @@
-# 1.3.1 - ToDo List backend:
+# 1.4.1 - ToDo List backend:
 
+- Made MongoDB connection string and SecretKey as secure Environment Variables
 - Added Server auto refresher
 - Added HTML-Email
 

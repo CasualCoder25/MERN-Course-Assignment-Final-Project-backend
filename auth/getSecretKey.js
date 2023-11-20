@@ -1,6 +1,6 @@
 const getSecretKey = (Date) => {
   return (
-    "voldemort" +
+    process.env["secret_key"] +
     Date.getMonth() +
     "-" +
     Date.getDate() +

@@ -17,7 +17,7 @@ const sleepPreventer = require("./services/sleepPreventer")
 mongoose.set("strictQuery", true)
 mongoose
   .connect(
-    "mongodb+srv://todolistmail23:usersTask12345@todocluster.3mr9jur.mongodb.net/todolist"
+    process.env["mongodb_connect_string"]
   )
   .catch((error) => console.log(error))
 var db = mongoose.connection
